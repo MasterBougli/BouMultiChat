@@ -74,6 +74,7 @@ public partial class MainWindow : Window
         int columnCount = ColumnsGrid.Children.Count;
         ColumnsGrid.Columns = Math.Max(1, columnCount);
         EmptyState.Visibility = columnCount == 0 ? Visibility.Visible : Visibility.Collapsed;
+        ColumnCountTextBlock.Text = $"{columnCount} / {MaximumColumnCount} colonnes";
     }
 
     /// <summary>

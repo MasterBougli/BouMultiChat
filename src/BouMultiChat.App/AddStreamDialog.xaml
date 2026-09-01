@@ -2,78 +2,148 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Ajouter une colonne"
-        Width="500"
+        Width="560"
         SizeToContent="Height"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
-        Background="{StaticResource SurfaceBrush}"
+        Background="{StaticResource BackgroundBrush}"
         Foreground="{StaticResource TextBrush}">
-    <Grid Margin="28">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <Border Margin="20"
+            Padding="28"
+            Background="{StaticResource SurfaceBrush}"
+            BorderBrush="{StaticResource BorderBrush}"
+            BorderThickness="1"
+            CornerRadius="16">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0">
-            <TextBlock Foreground="{StaticResource AccentBrush}"
-                       FontSize="11"
-                       FontWeight="Bold"
-                       Text="NOUVELLE COLONNE" />
-            <TextBlock Margin="0,6,0,0"
-                       FontSize="26"
-                       FontWeight="Bold"
-                       Text="Ajouter un stream" />
-        </StackPanel>
+            <StackPanel Grid.Row="0">
+                <TextBlock Foreground="{StaticResource AccentBrush}"
+                           FontSize="11"
+                           FontWeight="Bold"
+                           Text="NOUVELLE COLONNE" />
+                <TextBlock Margin="0,7,0,0"
+                           FontSize="27"
+                           FontWeight="Bold"
+                           Text="Ajouter un stream" />
+                <TextBlock Margin="0,8,0,0"
+                           Foreground="{StaticResource MutedTextBrush}"
+                           FontSize="13"
+                           LineHeight="20"
+                           TextWrapping="Wrap"
+                           Text="Choisissez la plateforme puis indiquez la chaîne à superviser. Aucun mot de passe n’est demandé." />
+            </StackPanel>
 
-        <StackPanel Grid.Row="1" Margin="0,22,0,0">
-            <TextBlock Margin="0,0,0,7" FontWeight="SemiBold" Text="Plateforme" />
-            <ComboBox x:Name="PlatformComboBox" Height="44" SelectedIndex="0">
-                <ComboBoxItem Tag="Twitch" Content="Twitch" />
-                <ComboBoxItem Tag="YouTube" Content="YouTube" />
-            </ComboBox>
-        </StackPanel>
+            <StackPanel Grid.Row="1" Margin="0,24,0,0">
+                <TextBlock Margin="0,0,0,9" FontSize="13" FontWeight="SemiBold" Text="Plateforme requise" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <RadioButton x:Name="TwitchRadioButton"
+                                 Grid.Column="0"
+                                 GroupName="Platform"
+                                 IsChecked="True"
+                                 Style="{StaticResource PlatformChoiceStyle}">
+                        <StackPanel>
+                            <TextBlock FontSize="15" FontWeight="Bold" Text="Twitch" />
+                            <TextBlock Margin="0,3,0,0"
+                                       Foreground="{StaticResource MutedTextBrush}"
+                                       FontSize="12"
+                                       Text="Nom de chaîne" />
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton x:Name="YouTubeRadioButton"
+                                 Grid.Column="2"
+                                 GroupName="Platform"
+                                 Style="{StaticResource PlatformChoiceStyle}">
+                        <StackPanel>
+                            <TextBlock FontSize="15" FontWeight="Bold" Text="YouTube" />
+                            <TextBlock Margin="0,3,0,0"
+                                       Foreground="{StaticResource MutedTextBrush}"
+                                       FontSize="12"
+                                       Text="Identifiant vidéo" />
+                        </StackPanel>
+                    </RadioButton>
+                </Grid>
+            </StackPanel>
 
-        <StackPanel Grid.Row="2" Margin="0,18,0,0">
-            <TextBlock Margin="0,0,0,7" FontWeight="SemiBold" Text="Nom de la colonne" />
-            <TextBox x:Name="DisplayNameTextBox"
-                     Height="44"
-                     MaxLength="40"
-                     Padding="12,10"
-                     Text="Mon live" />
-        </StackPanel>
+            <StackPanel Grid.Row="2" Margin="0,20,0,0">
+                <TextBlock Margin="0,0,0,8" FontSize="13" FontWeight="SemiBold">
+                    <Run Text="Nom de la colonne" /><Run Foreground="{StaticResource DangerBrush}" Text="  *" />
+                </TextBlock>
+                <TextBox x:Name="DisplayNameTextBox"
+                         MaxLength="40"
+                         Text="Mon live" />
+                <TextBlock Margin="2,7,0,0"
+                           Foreground="{StaticResource SubtleTextBrush}"
+                           FontSize="12"
+                           Text="Ce nom apparaît uniquement dans votre régie." />
+            </StackPanel>
 
-        <StackPanel Grid.Row="3" Margin="0,18,0,0">
-            <TextBlock Margin="0,0,0,7" FontWeight="SemiBold" Text="Chaîne ou identifiant vidéo" />
-            <TextBox x:Name="IdentifierTextBox"
-                     Height="44"
-                     MaxLength="64"
-                     Padding="12,10" />
-            <TextBlock Margin="0,7,0,0"
-                       Foreground="{StaticResource MutedTextBrush}"
-                       FontSize="12"
-                       Text="Twitch : nom de chaîne. YouTube : les 11 caractères après v=." />
-            <TextBlock x:Name="ErrorTextBlock"
-                       Margin="0,9,0,0"
-                       Foreground="#FF889A"
-                       TextWrapping="Wrap"
-                       Visibility="Collapsed" />
-        </StackPanel>
+            <StackPanel Grid.Row="3" Margin="0,20,0,0">
+                <TextBlock Margin="0,0,0,8" FontSize="13" FontWeight="SemiBold">
+                    <Run Text="Chaîne ou identifiant vidéo" /><Run Foreground="{StaticResource DangerBrush}" Text="  *" />
+                </TextBlock>
+                <TextBox x:Name="IdentifierTextBox" MaxLength="64" />
+                <TextBlock Margin="2,7,0,0"
+                           Foreground="{StaticResource MutedTextBrush}"
+                           FontSize="12"
+                           Text="Twitch : nom de chaîne · YouTube : 11 caractères après v=" />
+                <Border x:Name="ErrorBorder"
+                        Margin="0,12,0,0"
+                        Padding="12,10"
+                        Background="{StaticResource DangerSurfaceBrush}"
+                        BorderBrush="#71313D"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Visibility="Collapsed">
+                    <StackPanel>
+                        <TextBlock Foreground="{StaticResource DangerBrush}"
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Text="Impossible d’ajouter cette colonne" />
+                        <TextBlock x:Name="ErrorTextBlock"
+                                   Margin="0,4,0,0"
+                                   Foreground="#FFD2D9"
+                                   FontSize="12"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
 
-        <StackPanel Grid.Row="4"
-                    Margin="0,26,0,0"
-                    HorizontalAlignment="Right"
-                    Orientation="Horizontal">
-            <Button Margin="0,0,10,0"
-                    Click="CancelButtonClick"
-                    Content="Annuler" />
-            <Button Style="{StaticResource PrimaryButtonStyle}"
-                    Click="AddButtonClick"
-                    IsDefault="True"
-                    Content="Ajouter" />
-        </StackPanel>
-    </Grid>
+            <Grid Grid.Row="4" Margin="0,28,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock VerticalAlignment="Center"
+                           Foreground="{StaticResource SubtleTextBrush}"
+                           FontSize="11"
+                           Text="* Champs requis" />
+                <Button Grid.Column="1"
+                        MinWidth="96"
+                        Margin="0,0,10,0"
+                        Click="CancelButtonClick"
+                        IsCancel="True"
+                        Content="Annuler" />
+                <Button Grid.Column="2"
+                        MinWidth="110"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Click="AddButtonClick"
+                        IsDefault="True"
+                        Content="Ajouter" />
+            </Grid>
+        </Grid>
+    </Border>
 </Window>

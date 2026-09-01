@@ -25,7 +25,8 @@ public sealed partial class StreamColumnControl : UserControl, IDisposable
         InitializeComponent();
 
         TitleTextBlock.Text = definition.DisplayName;
-        PlatformTextBlock.Text = $"{definition.Platform} · {definition.Identifier}";
+        PlatformBadgeTextBlock.Text = definition.Platform.ToString().ToUpperInvariant();
+        IdentifierTextBlock.Text = definition.Identifier;
         Loaded += StreamColumnControlLoaded;
     }
 

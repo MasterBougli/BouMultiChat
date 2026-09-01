@@ -13,42 +13,93 @@
         Closed="WindowClosed">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="76" />
+            <RowDefinition Height="84" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="32" />
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
-            <Grid Margin="24,0">
+        <Border Grid.Row="0"
+                Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,0,0,1">
+            <Grid Margin="22,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <StackPanel VerticalAlignment="Center">
-                    <TextBlock FontSize="18" FontWeight="Bold" Text="BouMultiChat" />
-                    <TextBlock Margin="0,3,0,0"
-                               Foreground="{StaticResource MutedTextBrush}"
-                               FontSize="12"
-                               Text="Tous vos lives. Un seul regard." />
+
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <Border Width="42"
+                            Height="42"
+                            Background="{StaticResource AccentBrush}"
+                            CornerRadius="11">
+                        <Viewbox Width="23" Height="23">
+                            <Canvas Width="24" Height="24">
+                                <Path Data="M4,18 L4,12 M10,18 L10,6 M16,18 L16,9 M22,18 L22,3"
+                                      Stroke="{StaticResource AccentTextBrush}"
+                                      StrokeThickness="3"
+                                      StrokeStartLineCap="Round"
+                                      StrokeEndLineCap="Round" />
+                            </Canvas>
+                        </Viewbox>
+                    </Border>
+                    <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock FontSize="18" FontWeight="Bold" Text="BouMultiChat" />
+                        <TextBlock Margin="0,3,0,0"
+                                   Foreground="{StaticResource MutedTextBrush}"
+                                   FontSize="12"
+                                   Text="Régie multi-plateformes sécurisée" />
+                    </StackPanel>
                 </StackPanel>
-                <Button Grid.Column="1"
-                        Margin="0,0,10,0"
-                        IsEnabled="False"
-                        ToolTip="Le contrôle du relais de délai arrive après les colonnes"
-                        Content="Délai" />
-                <Button Grid.Column="2"
-                        Style="{StaticResource PrimaryButtonStyle}"
-                        Click="AddColumnButtonClick"
-                        Content="Ajouter une colonne" />
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Orientation="Horizontal">
+                    <Border Margin="0,0,10,0"
+                            Padding="12,7"
+                            VerticalAlignment="Center"
+                            Background="#172116"
+                            BorderBrush="#3A542B"
+                            BorderThickness="1"
+                            CornerRadius="18">
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Width="7" Height="7" Margin="0,0,7,0" VerticalAlignment="Center" Fill="{StaticResource AccentBrush}" />
+                            <TextBlock Foreground="#DCF9A6" FontSize="12" FontWeight="SemiBold" Text="Protection active" />
+                        </StackPanel>
+                    </Border>
+                    <Button Margin="0,0,10,0"
+                            IsEnabled="False"
+                            ToolTip="Disponible après l’intégration du relais de diffusion">
+                        <StackPanel Orientation="Horizontal">
+                            <Viewbox Width="16" Height="16" Margin="0,0,8,0">
+                                <Path Data="M12,2 A10,10 0 1 1 11.9,2 M12,6 L12,12 L16,14"
+                                      Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                      StrokeThickness="2"
+                                      StrokeLineJoin="Round" />
+                            </Viewbox>
+                            <TextBlock Text="Délai · bientôt" />
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource PrimaryButtonStyle}"
+                            Click="AddColumnButtonClick">
+                        <StackPanel Orientation="Horizontal">
+                            <Viewbox Width="16" Height="16" Margin="0,0,8,0">
+                                <Path Data="M12,4 L12,20 M4,12 L20,12"
+                                      Stroke="{StaticResource AccentTextBrush}"
+                                      StrokeThickness="2.3"
+                                      StrokeStartLineCap="Round" />
+                            </Viewbox>
+                            <TextBlock Text="Ajouter une colonne" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
             </Grid>
         </Border>
 
-        <Grid Grid.Row="1" Margin="9">
+        <Grid Grid.Row="1" Margin="12">
             <primitives:UniformGrid x:Name="ColumnsGrid" Columns="1" />
 
             <Border x:Name="EmptyState"
-                    Width="620"
-                    Padding="40"
+                    Width="680"
+                    Padding="42"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Background="{StaticResource SurfaceBrush}"
@@ -57,26 +108,59 @@
                     CornerRadius="18">
                 <StackPanel>
                     <TextBlock Foreground="{StaticResource AccentBrush}"
-                               FontSize="12"
+                               FontSize="11"
                                FontWeight="Bold"
-                               Text="RÉGIE PRÊTE" />
+                               Text="ESPACE DE TRAVAIL VIDE" />
                     <TextBlock Margin="0,12,0,0"
-                               FontSize="32"
+                               FontSize="34"
                                FontWeight="Bold"
-                               Text="Ajoutez votre premier live" />
-                    <TextBlock Margin="0,12,0,0"
+                               Text="Rassemblez vos lives ici" />
+                    <TextBlock Margin="0,13,0,0"
                                Foreground="{StaticResource MutedTextBrush}"
                                FontSize="15"
                                LineHeight="23"
                                TextWrapping="Wrap"
-                               Text="Twitch et YouTube sont disponibles dans cette première version. Chaque chat et lecteur reste isolé du processus natif." />
-                    <Button Margin="0,26,0,0"
+                               Text="Ajoutez une chaîne Twitch ou un direct YouTube. Le chat occupera la partie haute de la colonne et le retour vidéo restera visible en dessous." />
+                    <StackPanel Margin="0,22,0,0" Orientation="Horizontal">
+                        <Border Margin="0,0,8,0" Padding="11,7" Background="{StaticResource ElevatedSurfaceBrush}" CornerRadius="8">
+                            <TextBlock Foreground="{StaticResource MutedTextBrush}" FontSize="12" Text="Twitch" />
+                        </Border>
+                        <Border Margin="0,0,8,0" Padding="11,7" Background="{StaticResource ElevatedSurfaceBrush}" CornerRadius="8">
+                            <TextBlock Foreground="{StaticResource MutedTextBrush}" FontSize="12" Text="YouTube" />
+                        </Border>
+                        <Border Padding="11,7" Background="{StaticResource ElevatedSurfaceBrush}" CornerRadius="8">
+                            <TextBlock Foreground="{StaticResource MutedTextBrush}" FontSize="12" Text="WebView2 isolé" />
+                        </Border>
+                    </StackPanel>
+                    <Button Margin="0,28,0,0"
                             HorizontalAlignment="Left"
                             Style="{StaticResource PrimaryButtonStyle}"
                             Click="AddColumnButtonClick"
-                            Content="Ajouter une colonne" />
+                            Content="Ajouter mon premier live" />
                 </StackPanel>
             </Border>
         </Grid>
+
+        <Border Grid.Row="2"
+                Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,1,0,0">
+            <Grid Margin="14,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock VerticalAlignment="Center"
+                           Foreground="{StaticResource SubtleTextBrush}"
+                           FontSize="11"
+                           Text="Les pages externes restent isolées de l’application native." />
+                <TextBlock x:Name="ColumnCountTextBlock"
+                           Grid.Column="1"
+                           VerticalAlignment="Center"
+                           Foreground="{StaticResource MutedTextBrush}"
+                           FontSize="11"
+                           Text="0 / 4 colonnes" />
+            </Grid>
+        </Border>
     </Grid>
 </Window>

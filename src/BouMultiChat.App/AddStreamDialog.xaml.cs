@@ -1,5 +1,4 @@
 using System.Windows;
-using System.Windows.Controls;
 using BouMultiChat.Core;
 
 namespace BouMultiChat.App;
@@ -63,7 +62,7 @@ public partial class AddStreamDialog : Window
     /// <returns>Plateforme correspondant à l’option prédéfinie.</returns>
     private StreamingPlatform ReadSelectedPlatform()
     {
-        return PlatformComboBox.SelectedItem is ComboBoxItem { Tag: "YouTube" }
+        return YouTubeRadioButton.IsChecked == true
             ? StreamingPlatform.YouTube
             : StreamingPlatform.Twitch;
     }
@@ -75,7 +74,7 @@ public partial class AddStreamDialog : Window
     private void ShowError(string message)
     {
         ErrorTextBlock.Text = message;
-        ErrorTextBlock.Visibility = Visibility.Visible;
+        ErrorBorder.Visibility = Visibility.Visible;
         IdentifierTextBox.Focus();
     }
 }
