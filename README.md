@@ -2,7 +2,7 @@
 
 Application desktop Windows destinée aux créateurs qui diffusent simultanément sur plusieurs plateformes. Elle rassemblera les chats Twitch, YouTube, Kick, TikTok et les retours vidéo dans des colonnes indépendantes, avec un contrôle de délai de diffusion compatible avec un relais externe.
 
-> Le développement de l’application n’a pas encore commencé. Le dépôt contient d’abord les règles d’architecture, de contribution et de sécurité qui encadreront le code.
+Le développement a commencé par la frontière de sécurité : le dépôt contient une application WPF, une bibliothèque indépendante pour la validation des données non fiables et un projet de tests.
 
 ## Objectifs
 
@@ -38,7 +38,15 @@ Le contenu provenant des chats est considéré comme hostile. Il reste dans des 
 
 ## Construire le projet
 
-Les commandes seront ajoutées avec le premier squelette applicatif. Le SDK .NET 9 et le runtime WebView2 seront requis.
+Le SDK .NET 9 est requis.
+
+```powershell
+dotnet restore
+dotnet build --no-restore
+dotnet test --no-build
+```
+
+Le runtime WebView2 sera requis à partir de l’intégration des premières colonnes de chat.
 
 ## Contribuer
 
