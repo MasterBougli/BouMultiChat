@@ -1,0 +1,33 @@
+# Résultats de compilation .NET
+bin/
+obj/
+artifacts/
+
+# Outils et IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Paquets et rapports
+packages/
+TestResults/
+coverage/
+*.nupkg
+
+# Données locales et secrets
+appsettings.Local.json
+*.secrets.json
+*.pfx
+*.snk
+*.key
+*.pem
+logs/
+
+# Fichiers système
+Thumbs.db
+Desktop.ini
+.DS_Store

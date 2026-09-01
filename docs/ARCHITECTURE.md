@@ -1,0 +1,30 @@
+# Architecture cible
+
+## Vue générale
+
+BouMultiChat suivra une architecture simple en quatre zones :
+
+1. **Interface WPF** : fenêtres, commandes et disposition des colonnes.
+2. **Connecteurs de plateformes** : construction d’URLs autorisées et capacités déclarées par plateforme.
+3. **Services locaux** : persistance, secrets Windows et connexion OBS WebSocket.
+4. **Contrôleur de délai** : contrat réseau vers un relais RTMP/SRT externe.
+
+L’interface dépendra des services applicatifs. Les connecteurs ne pourront pas appeler l’interface, le système de fichiers ou lancer un processus.
+
+## Isolation des contenus web
+
+Chaque colonne utilisera des environnements WebView2 configurés sans pont JavaScript natif. Les événements de navigation seront contrôlés avant chargement. Une page ne pourra pas :
+
+- naviguer vers un domaine non autorisé ;
+- ouvrir une fenêtre secondaire ;
+- démarrer un téléchargement ;
+- appeler une commande native ;
+- lire les secrets d’une autre colonne.
+
+## Données locales
+
+La disposition et les identifiants publics de chaînes pourront être enregistrés en JSON. Les mots de passe et jetons seront conservés séparément, chiffrés pour l’utilisateur Windows courant.
+
+## Délai de diffusion
+
+Le délai OBS natif n’est pas modifiable pour une sortie déjà active. L’application pilotera donc un relais capable de tamponner ensemble l’audio et la vidéo. Son API sera locale, authentifiée et bornée à une plage de délai configurable.

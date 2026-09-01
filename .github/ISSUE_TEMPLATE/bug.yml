@@ -1,0 +1,32 @@
+name: Signaler un défaut
+description: Décrire un comportement incorrect reproductible
+title: "[Défaut] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "N’incluez aucun secret, jeton, mot de passe OBS ou contenu privé de chat."
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Que s’est-il passé et qu’attendiez-vous ?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Étapes de reproduction
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Version de Windows
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Journaux nettoyés
+      description: Supprimez toute donnée sensible avant de joindre un extrait.
