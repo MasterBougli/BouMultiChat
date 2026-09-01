@@ -59,4 +59,19 @@ public sealed class EmbedUrlValidatorTests
         Assert.False(accepted);
         Assert.NotEmpty(reason);
     }
+
+    /// <summary>
+    /// Confirme qu’une valeur de plateforme inconnue issue d’une configuration altérée est refusée sans exception.
+    /// </summary>
+    [Fact]
+    public void TryValidateRefuseUnePlateformeInconnue()
+    {
+        bool accepted = EmbedUrlValidator.TryValidate(
+            "https://www.twitch.tv/embed/demo/chat",
+            (StreamingPlatform)999,
+            out string reason);
+
+        Assert.False(accepted);
+        Assert.NotEmpty(reason);
+    }
 }

@@ -13,6 +13,17 @@ Le développement a commencé par la frontière de sécurité : le dépôt cont
 - piloter un relais RTMP/SRT pour modifier le délai sans interrompre le live ;
 - proposer une interface sombre, dense, accessible et utilisable au clavier.
 
+## État actuel
+
+- ajout et suppression de quatre colonnes simultanées ;
+- lecteur et chat Twitch à partir d’un nom de chaîne ;
+- lecteur et chat YouTube à partir d’un identifiant vidéo ;
+- isolation WebView2 par colonne ;
+- blocage des domaines non autorisés, téléchargements, fenêtres secondaires, permissions sensibles et ponts JavaScript natifs ;
+- validation automatisée des identifiants et des tentatives courantes d’injection.
+
+La sauvegarde des dispositions, OBS, le relais de délai, Kick et TikTok restent à implémenter.
+
 ## Choix technique
 
 - **C# et .NET 9** pour le code applicatif ;

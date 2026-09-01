@@ -61,7 +61,7 @@ public static class EmbedUrlValidator
             return false;
         }
 
-        if (!AllowedHosts[platform].Contains(uri.IdnHost))
+        if (!AllowedHosts.TryGetValue(platform, out HashSet<string>? hosts) || !hosts.Contains(uri.IdnHost))
         {
             failureReason = "Le domaine n’est pas autorisé pour cette plateforme.";
             return false;
