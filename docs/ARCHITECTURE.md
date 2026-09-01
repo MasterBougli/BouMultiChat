@@ -23,8 +23,8 @@ Chaque colonne utilisera des environnements WebView2 configurés sans pont JavaS
 
 ## Données locales
 
-La disposition et les identifiants publics de chaînes pourront être enregistrés en JSON. Les mots de passe et jetons seront conservés séparément, chiffrés pour l’utilisateur Windows courant.
+La disposition et les identifiants publics de chaînes sont enregistrés atomiquement en JSON dans les données locales Windows. Chaque entrée rechargée repasse par la validation de liste blanche. Les futurs mots de passe et jetons seront conservés séparément, chiffrés pour l’utilisateur Windows courant.
 
 ## Délai de diffusion
 
-Le délai OBS natif n’est pas modifiable pour une sortie déjà active. L’application pilotera donc un relais capable de tamponner ensemble l’audio et la vidéo. Son API sera locale, authentifiée et bornée à une plage de délai configurable.
+Le délai OBS natif n’est pas modifiable pour une sortie déjà active. L’application pilotera donc BouVideoServ, qui reçoit déjà le RTMP avec MediaMTX. Un processus FFmpeg devra relire l’entrée, maintenir un tampon audio/vidéo puis publier une sortie distincte vers chaque plateforme. Son API restera locale, authentifiée et bornée à une plage de délai configurable.

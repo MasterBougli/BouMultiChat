@@ -1,13 +1,13 @@
 # BouMultiChat
 
-Application desktop Windows destinée aux créateurs qui diffusent simultanément sur plusieurs plateformes. Elle rassemblera les chats Twitch, YouTube, Kick, TikTok et les retours vidéo dans des colonnes indépendantes, avec un contrôle de délai de diffusion compatible avec un relais externe.
+Application desktop Windows destinée aux créateurs qui diffusent simultanément sur plusieurs plateformes. Elle rassemble les chats Twitch, YouTube, Kick et Trovo ainsi que les retours vidéo dans des colonnes indépendantes, avec un futur contrôle de délai compatible avec un relais externe.
 
 Le développement a commencé par la frontière de sécurité : le dépôt contient une application WPF, une bibliothèque indépendante pour la validation des données non fiables et un projet de tests.
 
 ## Objectifs
 
 - afficher plusieurs chats et aperçus vidéo sur un seul écran ;
-- sauvegarder une disposition différente selon le profil de diffusion ;
+- sauvegarder et restaurer automatiquement la disposition locale ;
 - isoler les pages web des plateformes du processus principal ;
 - communiquer avec OBS par WebSocket sans exposer ses identifiants ;
 - piloter un relais RTMP/SRT pour modifier le délai sans interrompre le live ;
@@ -18,11 +18,17 @@ Le développement a commencé par la frontière de sécurité : le dépôt cont
 - ajout et suppression de quatre colonnes simultanées ;
 - lecteur et chat Twitch à partir d’un nom de chaîne ;
 - lecteur et chat YouTube à partir d’un identifiant vidéo ;
+- lecteur et chat Kick à partir d’un nom de chaîne ;
+- lecteur et chat Trovo à partir d’un nom de chaîne, sous réserve de l’autorisation de domaine demandée par Trovo ;
+- chats verrouillés en lecture seule et zones d’écriture masquées ;
+- sauvegarde et restauration automatiques dans les données locales Windows ;
+- reconnexion automatique bornée et bouton de rechargement manuel ;
+- icône dédiée dans la barre des tâches Windows ;
 - isolation WebView2 par colonne ;
 - blocage des domaines non autorisés, téléchargements, fenêtres secondaires, permissions sensibles et ponts JavaScript natifs ;
 - validation automatisée des identifiants et des tentatives courantes d’injection.
 
-La sauvegarde des dispositions, OBS, le relais de délai, Kick et TikTok restent à implémenter.
+OBS et le relais de délai restent à implémenter. TikTok LIVE ne fournit actuellement pas de chat officiel intégrable et n’est donc pas activé.
 
 ## Choix technique
 
@@ -43,9 +49,9 @@ Le contenu provenant des chats est considéré comme hostile. Il reste dans des 
 1. Fenêtre principale et gestion des colonnes.
 2. Validation centralisée des plateformes et des URLs.
 3. Intégration Twitch et YouTube.
-4. Connexion OBS WebSocket sécurisée.
-5. Contrat du contrôleur de délai externe.
-6. Connecteurs Kick et TikTok selon leurs possibilités officielles.
+4. Sauvegarde locale et connecteurs Kick et Trovo.
+5. Connexion OBS WebSocket sécurisée.
+6. Contrat du contrôleur de délai vers BouVideoServ.
 
 ## Construire le projet
 

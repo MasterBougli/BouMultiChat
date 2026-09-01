@@ -15,5 +15,8 @@ public enum StreamingPlatform
     Kick,
 
     /// <summary>Plateforme TikTok.</summary>
-    TikTok
+    TikTok,
+
+    /// <summary>Plateforme Trovo.</summary>
+    Trovo
 }

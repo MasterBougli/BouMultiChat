@@ -37,4 +37,47 @@ internal sealed class StreamColumnDefinition
 
     /// <summary>Obtient les adresses sécurisées du chat et du lecteur.</summary>
     internal EmbedAddresses Addresses { get; }
+
+    /// <summary>
+    /// Produit la représentation minimale enregistrée sur le disque local.
+    /// </summary>
+    /// <returns>Données publiques nécessaires à la restauration.</returns>
+    internal SavedStreamColumn ToSavedColumn()
+    {
+        return new SavedStreamColumn
+        {
+            DisplayName = DisplayName,
+            Platform = Platform,
+            Identifier = Identifier
+        };
+    }
+
+    /// <summary>
+    /// Valide une entrée rechargée avant de la transformer en définition utilisable.
+    /// </summary>
+    /// <param name="saved">Entrée provenant du fichier local non fiable.</param>
+    /// <param name="definition">Définition sûre créée en cas de succès.</param>
+    /// <returns><see langword="true"/> lorsque toutes les données sont valides.</returns>
+    internal static bool TryRestore(SavedStreamColumn? saved, out StreamColumnDefinition? definition)
+    {
+        definition = null;
+        if (saved is null
+            || saved.DisplayName is null
+            || saved.Identifier is null
+            || saved.DisplayName.Length is < 1 or > 40)
+        {
+            return false;
+        }
+
+        string displayName = saved.DisplayName.Trim();
+        string identifier = saved.Identifier.Trim();
+        if (displayName.Length is < 1 or > 40
+            || !EmbedUrlFactory.TryCreate(saved.Platform, identifier, out EmbedAddresses? addresses, out _))
+        {
+            return false;
+        }
+
+        definition = new StreamColumnDefinition(displayName, saved.Platform, identifier, addresses!);
+        return true;
+    }
 }

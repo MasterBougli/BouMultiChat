@@ -44,6 +44,32 @@ public sealed class EmbedUrlFactoryTests
     }
 
     /// <summary>
+    /// Confirme que les plateformes basées sur un nom de chaîne utilisent leurs domaines officiels.
+    /// </summary>
+    /// <param name="platform">Plateforme à construire.</param>
+    /// <param name="expectedChatHost">Domaine attendu pour le chat.</param>
+    /// <param name="expectedVideoHost">Domaine attendu pour le lecteur.</param>
+    [Theory]
+    [InlineData(StreamingPlatform.Kick, "kick.com", "player.kick.com")]
+    [InlineData(StreamingPlatform.Trovo, "player.trovo.live", "player.trovo.live")]
+    public void TryCreateConstruitLesColonnesParNomDeChaine(
+        StreamingPlatform platform,
+        string expectedChatHost,
+        string expectedVideoHost)
+    {
+        bool created = EmbedUrlFactory.TryCreate(
+            platform,
+            "Chaine_42",
+            out EmbedAddresses? addresses,
+            out string reason);
+
+        Assert.True(created, reason);
+        Assert.NotNull(addresses);
+        Assert.Equal(expectedChatHost, addresses.Chat.Host);
+        Assert.Equal(expectedVideoHost, addresses.Video.Host);
+    }
+
+    /// <summary>
     /// Confirme que les identifiants contenant une charge hostile ou une taille incorrecte sont refusés.
     /// </summary>
     /// <param name="platform">Plateforme annoncée.</param>
@@ -53,8 +79,9 @@ public sealed class EmbedUrlFactoryTests
     [InlineData(StreamingPlatform.Twitch, "<script>alert(1)</script>")]
     [InlineData(StreamingPlatform.YouTube, "javascript:")]
     [InlineData(StreamingPlatform.YouTube, "trop-court")]
-    [InlineData(StreamingPlatform.Kick, "demo")]
     [InlineData(StreamingPlatform.TikTok, "demo")]
+    [InlineData(StreamingPlatform.Kick, "demo/../../evil")]
+    [InlineData(StreamingPlatform.Trovo, "<script>")]
     public void TryCreateRefuseLesIdentifiantsHostiles(StreamingPlatform platform, string identifier)
     {
         bool created = EmbedUrlFactory.TryCreate(platform, identifier, out EmbedAddresses? addresses, out string reason);

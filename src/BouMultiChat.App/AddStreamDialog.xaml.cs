@@ -62,8 +62,18 @@ public partial class AddStreamDialog : Window
     /// <returns>Plateforme correspondant à l’option prédéfinie.</returns>
     private StreamingPlatform ReadSelectedPlatform()
     {
-        return YouTubeRadioButton.IsChecked == true
-            ? StreamingPlatform.YouTube
+        if (YouTubeRadioButton.IsChecked == true)
+        {
+            return StreamingPlatform.YouTube;
+        }
+
+        if (KickRadioButton.IsChecked == true)
+        {
+            return StreamingPlatform.Kick;
+        }
+
+        return TrovoRadioButton.IsChecked == true
+            ? StreamingPlatform.Trovo
             : StreamingPlatform.Twitch;
     }
 

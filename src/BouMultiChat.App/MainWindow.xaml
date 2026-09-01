@@ -10,6 +10,8 @@
         WindowStartupLocation="CenterScreen"
         Background="{StaticResource BackgroundBrush}"
         Foreground="{StaticResource TextBrush}"
+        Icon="{StaticResource ApplicationIcon}"
+        Loaded="WindowLoaded"
         Closed="WindowClosed">
     <Grid>
         <Grid.RowDefinitions>
@@ -64,6 +66,18 @@
                             <Ellipse Width="7" Height="7" Margin="0,0,7,0" VerticalAlignment="Center" Fill="{StaticResource AccentBrush}" />
                             <TextBlock Foreground="#DCF9A6" FontSize="12" FontWeight="SemiBold" Text="Protection active" />
                         </StackPanel>
+                    </Border>
+                    <Border Margin="0,0,10,0"
+                            Padding="12,7"
+                            VerticalAlignment="Center"
+                            Background="{StaticResource ElevatedSurfaceBrush}"
+                            BorderBrush="{StaticResource BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="18">
+                        <TextBlock x:Name="SaveStatusTextBlock"
+                                   Foreground="{StaticResource MutedTextBrush}"
+                                   FontSize="12"
+                                   Text="Sauvegarde locale" />
                     </Border>
                     <Button Margin="0,0,10,0"
                             IsEnabled="False"
@@ -120,7 +134,7 @@
                                FontSize="15"
                                LineHeight="23"
                                TextWrapping="Wrap"
-                               Text="Ajoutez une chaîne Twitch ou un direct YouTube. Le chat occupera la partie haute de la colonne et le retour vidéo restera visible en dessous." />
+                               Text="Ajoutez une chaîne Twitch, YouTube, Kick ou Trovo. Le chat en lecture seule occupera la partie haute et le retour vidéo restera visible en dessous." />
                     <StackPanel Margin="0,22,0,0" Orientation="Horizontal">
                         <Border Margin="0,0,8,0" Padding="11,7" Background="{StaticResource ElevatedSurfaceBrush}" CornerRadius="8">
                             <TextBlock Foreground="{StaticResource MutedTextBrush}" FontSize="12" Text="Twitch" />
@@ -129,7 +143,7 @@
                             <TextBlock Foreground="{StaticResource MutedTextBrush}" FontSize="12" Text="YouTube" />
                         </Border>
                         <Border Padding="11,7" Background="{StaticResource ElevatedSurfaceBrush}" CornerRadius="8">
-                            <TextBlock Foreground="{StaticResource MutedTextBrush}" FontSize="12" Text="WebView2 isolé" />
+                            <TextBlock Foreground="{StaticResource MutedTextBrush}" FontSize="12" Text="Kick + Trovo" />
                         </Border>
                     </StackPanel>
                     <Button Margin="0,28,0,0"
@@ -153,7 +167,7 @@
                 <TextBlock VerticalAlignment="Center"
                            Foreground="{StaticResource SubtleTextBrush}"
                            FontSize="11"
-                           Text="Les pages externes restent isolées de l’application native." />
+                           Text="Les pages externes sont isolées et les chats restent en lecture seule." />
                 <TextBlock x:Name="ColumnCountTextBlock"
                            Grid.Column="1"
                            VerticalAlignment="Center"

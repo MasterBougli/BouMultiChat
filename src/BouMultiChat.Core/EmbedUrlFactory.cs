@@ -11,7 +11,7 @@ public static partial class EmbedUrlFactory
     /// Construit les adresses du chat et du lecteur pour une plateforme prise en charge.
     /// </summary>
     /// <param name="platform">Plateforme de la diffusion.</param>
-    /// <param name="identifier">Nom de chaîne Twitch ou identifiant de vidéo YouTube.</param>
+    /// <param name="identifier">Nom de chaîne ou identifiant public attendu par la plateforme.</param>
     /// <param name="addresses">Adresses validées lorsque la création réussit.</param>
     /// <param name="failureReason">Motif français du refus.</param>
     /// <returns><see langword="true"/> lorsque les deux adresses sont sûres et utilisables.</returns>
@@ -40,12 +40,28 @@ public static partial class EmbedUrlFactory
                 videoAddress = $"https://www.youtube-nocookie.com/embed/{normalizedIdentifier}";
                 break;
 
+            case StreamingPlatform.Kick when ChannelNameRegex().IsMatch(normalizedIdentifier):
+                string kickChannel = normalizedIdentifier.ToLowerInvariant();
+                chatAddress = $"https://kick.com/{kickChannel}/chatroom";
+                videoAddress = $"https://player.kick.com/{kickChannel}?muted=true&autoplay=false";
+                break;
+
+            case StreamingPlatform.Trovo when ChannelNameRegex().IsMatch(normalizedIdentifier):
+                chatAddress = $"https://player.trovo.live/chat/{normalizedIdentifier}";
+                videoAddress = $"https://player.trovo.live/embed/player?streamername={normalizedIdentifier}&muted=1&autoplay=0&hidefollow=1&hidesub=1";
+                break;
+
             case StreamingPlatform.Twitch:
                 failureReason = "Le nom Twitch doit contenir 1 à 25 lettres, chiffres ou traits de soulignement.";
                 return false;
 
             case StreamingPlatform.YouTube:
                 failureReason = "L’identifiant d’une vidéo YouTube doit contenir exactement 11 caractères autorisés.";
+                return false;
+
+            case StreamingPlatform.Kick:
+            case StreamingPlatform.Trovo:
+                failureReason = "Le nom de chaîne doit contenir 1 à 30 lettres, chiffres ou traits de soulignement.";
                 return false;
 
             default:
@@ -77,4 +93,11 @@ public static partial class EmbedUrlFactory
     /// <returns>Expression régulière bornée et insensible à la culture.</returns>
     [GeneratedRegex("^[A-Za-z0-9_-]{11}$", RegexOptions.CultureInvariant)]
     private static partial Regex YouTubeVideoRegex();
+
+    /// <summary>
+    /// Fournit l’expression régulière compilée des noms de chaîne Kick et Trovo autorisés.
+    /// </summary>
+    /// <returns>Expression régulière bornée et insensible à la culture.</returns>
+    [GeneratedRegex("^[A-Za-z0-9_]{1,30}$", RegexOptions.CultureInvariant)]
+    private static partial Regex ChannelNameRegex();
 }

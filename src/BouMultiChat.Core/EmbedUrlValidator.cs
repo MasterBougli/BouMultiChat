@@ -25,6 +25,10 @@ public static class EmbedUrlValidator
             [StreamingPlatform.TikTok] = new(StringComparer.OrdinalIgnoreCase)
             {
                 "tiktok.com", "www.tiktok.com"
+            },
+            [StreamingPlatform.Trovo] = new(StringComparer.OrdinalIgnoreCase)
+            {
+                "trovo.live", "www.trovo.live", "player.trovo.live"
             }
         };
 

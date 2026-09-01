@@ -1,5 +1,7 @@
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using BouMultiChat.Core;
 
 namespace BouMultiChat.App;
 
@@ -9,6 +11,7 @@ namespace BouMultiChat.App;
 public partial class MainWindow : Window
 {
     private const int MaximumColumnCount = 4;
+    private readonly ColumnSettingsStore settingsStore = ColumnSettingsStore.CreateDefault();
 
     /// <summary>
     /// Initialise la fenêtre principale et ses composants visuels.
@@ -16,6 +19,38 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+    }
+
+    /// <summary>
+    /// Recharge automatiquement les colonnes locales après l’initialisation de la fenêtre.
+    /// </summary>
+    /// <param name="sender">Fenêtre devenue disponible.</param>
+    /// <param name="e">Informations de chargement.</param>
+    private void WindowLoaded(object sender, RoutedEventArgs e)
+    {
+        Loaded -= WindowLoaded;
+        int restoredCount = 0;
+
+        foreach (SavedStreamColumn saved in settingsStore.Load())
+        {
+            if (restoredCount >= MaximumColumnCount)
+            {
+                break;
+            }
+
+            if (!StreamColumnDefinition.TryRestore(saved, out StreamColumnDefinition? definition))
+            {
+                continue;
+            }
+
+            AddColumn(definition!);
+            restoredCount++;
+        }
+
+        UpdateColumnLayout();
+        SaveStatusTextBlock.Text = restoredCount == 0
+            ? "Sauvegarde locale"
+            : $"{restoredCount} colonne(s) restaurée(s)";
     }
 
     /// <summary>
@@ -42,10 +77,20 @@ public partial class MainWindow : Window
             return;
         }
 
-        StreamColumnControl column = new(dialog.Definition);
+        AddColumn(dialog.Definition);
+        UpdateColumnLayout();
+        SaveColumns();
+    }
+
+    /// <summary>
+    /// Ajoute une définition validée à la grille et branche ses événements.
+    /// </summary>
+    /// <param name="definition">Définition sûre à afficher.</param>
+    private void AddColumn(StreamColumnDefinition definition)
+    {
+        StreamColumnControl column = new(definition);
         column.RemoveRequested += RemoveColumnRequested;
         ColumnsGrid.Children.Add(column);
-        UpdateColumnLayout();
     }
 
     /// <summary>
@@ -64,6 +109,26 @@ public partial class MainWindow : Window
         ColumnsGrid.Children.Remove(column);
         column.Dispose();
         UpdateColumnLayout();
+        SaveColumns();
+    }
+
+    /// <summary>
+    /// Enregistre la disposition courante sans interrompre l’application en cas d’erreur disque.
+    /// </summary>
+    private void SaveColumns()
+    {
+        try
+        {
+            settingsStore.Save(
+                ColumnsGrid.Children
+                    .OfType<StreamColumnControl>()
+                    .Select(column => column.Definition.ToSavedColumn()));
+            SaveStatusTextBlock.Text = "Enregistré automatiquement";
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException)
+        {
+            SaveStatusTextBlock.Text = "Sauvegarde impossible";
+        }
     }
 
     /// <summary>

@@ -24,6 +24,7 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Border Padding="9,6"
                         VerticalAlignment="Center"
@@ -57,6 +58,19 @@
                 </Border>
                 <Button Grid.Column="3"
                         Style="{StaticResource IconButtonStyle}"
+                        Click="ReloadButtonClick"
+                        ToolTip="Recharger le chat et la vidéo"
+                        AutomationProperties.Name="Recharger le chat et la vidéo">
+                    <Viewbox Width="18" Height="18">
+                        <Path Data="M19,8 A8,8 0 1 0 20,15 M19,4 L19,9 L14,9"
+                              Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                              StrokeThickness="2"
+                              StrokeStartLineCap="Round"
+                              StrokeLineJoin="Round" />
+                    </Viewbox>
+                </Button>
+                <Button Grid.Column="4"
+                        Style="{StaticResource IconButtonStyle}"
                         Click="RemoveButtonClick"
                         ToolTip="Supprimer cette colonne"
                         AutomationProperties.Name="Supprimer cette colonne">
@@ -83,7 +97,7 @@
                                Foreground="{StaticResource SubtleTextBrush}"
                                FontSize="9"
                                FontWeight="Bold"
-                               Text="CHAT EN DIRECT" />
+                               Text="CHAT EN DIRECT · LECTURE SEULE" />
                 </Border>
                 <wv2:WebView2 x:Name="ChatWebView"
                               Grid.Row="1"

@@ -12,7 +12,32 @@ namespace BouMultiChat.App;
 /// </summary>
 public sealed partial class StreamColumnControl : UserControl, IDisposable
 {
+    private const int MaximumReloadAttempts = 3;
+    private const string ReadOnlyChatScript = """
+        (() => {
+            // Neutralise et masque toutes les zones capables d’envoyer du contenu.
+            const verrouiller = () => {
+                document.querySelectorAll('textarea, input, form, [contenteditable="true"]')
+                    .forEach(element => {
+                        element.setAttribute('aria-hidden', 'true');
+                        element.style.setProperty('display', 'none', 'important');
+                    });
+            };
+
+            // Bloque les actions d’écriture même si la plateforme recrée son formulaire.
+            ['beforeinput', 'paste', 'drop', 'submit'].forEach(type =>
+                document.addEventListener(type, event => event.preventDefault(), true));
+
+            verrouiller();
+            new MutationObserver(verrouiller).observe(document.documentElement, {
+                childList: true,
+                subtree: true
+            });
+        })();
+        """;
+
     private readonly StreamColumnDefinition definition;
+    private int reloadAttemptCount;
     private bool disposed;
 
     /// <summary>
@@ -32,6 +57,9 @@ public sealed partial class StreamColumnControl : UserControl, IDisposable
 
     /// <summary>Signale à la fenêtre principale que l’utilisateur souhaite retirer la colonne.</summary>
     internal event EventHandler? RemoveRequested;
+
+    /// <summary>Obtient la définition sûre représentée par cette colonne.</summary>
+    internal StreamColumnDefinition Definition => definition;
 
     /// <summary>
     /// Libère immédiatement les processus WebView2 associés à la colonne.
@@ -82,8 +110,8 @@ public sealed partial class StreamColumnControl : UserControl, IDisposable
             Guid.NewGuid().ToString("N"));
 
         CoreWebView2Environment environment = await CoreWebView2Environment.CreateAsync(userDataFolder: profileFolder);
-        await ConfigureWebViewAsync(ChatWebView, definition.Addresses.Chat, environment);
-        await ConfigureWebViewAsync(VideoWebView, definition.Addresses.Video, environment);
+        await ConfigureWebViewAsync(ChatWebView, definition.Addresses.Chat, environment, isChat: true);
+        await ConfigureWebViewAsync(VideoWebView, definition.Addresses.Video, environment, isChat: false);
     }
 
     /// <summary>
@@ -92,11 +120,13 @@ public sealed partial class StreamColumnControl : UserControl, IDisposable
     /// <param name="webView">Vue à sécuriser.</param>
     /// <param name="address">Adresse déjà validée par le cœur métier.</param>
     /// <param name="environment">Environnement privé partagé dans la colonne.</param>
+    /// <param name="isChat">Indique si la vue doit être verrouillée en lecture seule.</param>
     /// <returns>Tâche terminée lorsque la vue peut naviguer.</returns>
     private async Task ConfigureWebViewAsync(
         WebView2 webView,
         Uri address,
-        CoreWebView2Environment environment)
+        CoreWebView2Environment environment,
+        bool isChat)
     {
         webView.AllowExternalDrop = false;
         await webView.EnsureCoreWebView2Async(environment);
@@ -116,7 +146,70 @@ public sealed partial class StreamColumnControl : UserControl, IDisposable
         webView.CoreWebView2.DownloadStarting += DownloadStarting;
         webView.CoreWebView2.PermissionRequested += PermissionRequested;
         webView.CoreWebView2.ProcessFailed += ProcessFailed;
+        webView.CoreWebView2.NavigationCompleted += NavigationCompleted;
+        if (isChat)
+        {
+            webView.CoreWebView2.DOMContentLoaded += ChatContentLoaded;
+        }
+
         webView.Source = address;
+    }
+
+    /// <summary>
+    /// Applique le verrou de lecture seule dès que le document du chat est disponible.
+    /// </summary>
+    /// <param name="sender">Moteur du chat chargé.</param>
+    /// <param name="e">Informations de chargement du document.</param>
+    private async void ChatContentLoaded(object? sender, CoreWebView2DOMContentLoadedEventArgs e)
+    {
+        if (disposed || sender is not CoreWebView2 webView)
+        {
+            return;
+        }
+
+        try
+        {
+            await webView.ExecuteScriptAsync(ReadOnlyChatScript);
+        }
+        catch (InvalidOperationException)
+        {
+            ShowSafeError("Le verrou de lecture seule n’a pas pu être appliqué. Rechargez la colonne.");
+        }
+    }
+
+    /// <summary>
+    /// Masque les erreurs résolues ou déclenche une reconnexion automatique bornée.
+    /// </summary>
+    /// <param name="sender">Moteur ayant terminé sa navigation.</param>
+    /// <param name="e">Résultat de la navigation.</param>
+    private async void NavigationCompleted(object? sender, CoreWebView2NavigationCompletedEventArgs e)
+    {
+        if (disposed)
+        {
+            return;
+        }
+
+        if (e.IsSuccess)
+        {
+            reloadAttemptCount = 0;
+            LoadingTextBlock.Visibility = Visibility.Collapsed;
+            ErrorBorder.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        if (sender is not CoreWebView2 webView || reloadAttemptCount >= MaximumReloadAttempts)
+        {
+            ShowSafeError("La plateforme ne répond pas. Utilisez le bouton de rechargement pour réessayer.");
+            return;
+        }
+
+        reloadAttemptCount++;
+        ShowSafeError($"Connexion interrompue. Nouvelle tentative {reloadAttemptCount}/{MaximumReloadAttempts}…");
+        await Task.Delay(TimeSpan.FromSeconds(reloadAttemptCount));
+        if (!disposed)
+        {
+            webView.Reload();
+        }
     }
 
     /// <summary>
@@ -168,9 +261,37 @@ public sealed partial class StreamColumnControl : UserControl, IDisposable
     /// </summary>
     /// <param name="sender">Moteur dont le processus a échoué.</param>
     /// <param name="e">Informations techniques volontairement non journalisées.</param>
-    private void ProcessFailed(object? sender, CoreWebView2ProcessFailedEventArgs e)
+    private async void ProcessFailed(object? sender, CoreWebView2ProcessFailedEventArgs e)
     {
-        ShowSafeError("Le processus du chat ou du lecteur s’est arrêté. Retirez puis recréez la colonne.");
+        if (disposed || reloadAttemptCount >= MaximumReloadAttempts)
+        {
+            ShowSafeError("Le processus du chat ou du lecteur s’est arrêté. Utilisez le bouton de rechargement.");
+            return;
+        }
+
+        reloadAttemptCount++;
+        ShowSafeError($"Le moteur web a été interrompu. Relance {reloadAttemptCount}/{MaximumReloadAttempts}…");
+        await Task.Delay(TimeSpan.FromSeconds(reloadAttemptCount));
+        if (!disposed)
+        {
+            ChatWebView.CoreWebView2?.Reload();
+            VideoWebView.CoreWebView2?.Reload();
+        }
+    }
+
+    /// <summary>
+    /// Relance manuellement les deux vues après une erreur ou une coupure réseau.
+    /// </summary>
+    /// <param name="sender">Bouton de rechargement.</param>
+    /// <param name="e">Informations du clic.</param>
+    private void ReloadButtonClick(object sender, RoutedEventArgs e)
+    {
+        reloadAttemptCount = 0;
+        ErrorBorder.Visibility = Visibility.Collapsed;
+        LoadingTextBlock.Visibility = Visibility.Visible;
+
+        ChatWebView.CoreWebView2?.Reload();
+        VideoWebView.CoreWebView2?.Reload();
     }
 
     /// <summary>

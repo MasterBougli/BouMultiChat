@@ -17,6 +17,7 @@ public sealed class EmbedUrlValidatorTests
     [InlineData("https://www.youtube-nocookie.com/embed/video", StreamingPlatform.YouTube)]
     [InlineData("https://player.kick.com/demo", StreamingPlatform.Kick)]
     [InlineData("https://www.tiktok.com/@demo/live", StreamingPlatform.TikTok)]
+    [InlineData("https://player.trovo.live/chat/demo", StreamingPlatform.Trovo)]
     public void TryValidateAccepteLesDomainesOfficiels(string address, StreamingPlatform platform)
     {
         bool accepted = EmbedUrlValidator.TryValidate(address, platform, out string reason);

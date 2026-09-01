@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Ajouter une colonne"
-        Width="560"
+        Width="620"
         SizeToContent="Height"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
@@ -49,6 +49,11 @@
                         <ColumnDefinition Width="12" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="12" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
                     <RadioButton x:Name="TwitchRadioButton"
                                  Grid.Column="0"
                                  GroupName="Platform"
@@ -74,7 +79,37 @@
                                        Text="Identifiant vidéo" />
                         </StackPanel>
                     </RadioButton>
+                    <RadioButton x:Name="KickRadioButton"
+                                 Grid.Row="2"
+                                 Grid.Column="0"
+                                 GroupName="Platform"
+                                 Style="{StaticResource PlatformChoiceStyle}">
+                        <StackPanel>
+                            <TextBlock FontSize="15" FontWeight="Bold" Text="Kick" />
+                            <TextBlock Margin="0,3,0,0"
+                                       Foreground="{StaticResource MutedTextBrush}"
+                                       FontSize="12"
+                                       Text="Nom de chaîne" />
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton x:Name="TrovoRadioButton"
+                                 Grid.Row="2"
+                                 Grid.Column="2"
+                                 GroupName="Platform"
+                                 Style="{StaticResource PlatformChoiceStyle}">
+                        <StackPanel>
+                            <TextBlock FontSize="15" FontWeight="Bold" Text="Trovo" />
+                            <TextBlock Margin="0,3,0,0"
+                                       Foreground="{StaticResource MutedTextBrush}"
+                                       FontSize="12"
+                                       Text="Nom de chaîne" />
+                        </StackPanel>
+                    </RadioButton>
                 </Grid>
+                <TextBlock Margin="2,9,0,0"
+                           Foreground="{StaticResource SubtleTextBrush}"
+                           FontSize="11"
+                           Text="TikTok LIVE ne fournit pas encore de chat officiel intégrable." />
             </StackPanel>
 
             <StackPanel Grid.Row="2" Margin="0,20,0,0">
@@ -98,7 +133,7 @@
                 <TextBlock Margin="2,7,0,0"
                            Foreground="{StaticResource MutedTextBrush}"
                            FontSize="12"
-                           Text="Twitch : nom de chaîne · YouTube : 11 caractères après v=" />
+                           Text="Twitch, Kick, Trovo : nom de chaîne · YouTube : 11 caractères après v=" />
                 <Border x:Name="ErrorBorder"
                         Margin="0,12,0,0"
                         Padding="12,10"
