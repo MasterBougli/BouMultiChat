@@ -28,3 +28,13 @@ La disposition et les identifiants publics de chaînes sont enregistrés atomiqu
 ## Délai de diffusion
 
 Le délai OBS natif n’est pas modifiable pour une sortie déjà active. L’application pilotera donc BouVideoServ, qui reçoit déjà le RTMP avec MediaMTX. Un processus FFmpeg devra relire l’entrée, maintenir un tampon audio/vidéo puis publier une sortie distincte vers chaque plateforme. Son API restera locale, authentifiée et bornée à une plage de délai configurable.
+
+## Contrôle de BouVideoServ
+
+BouMultiChat ne charge pas le serveur dans son propre processus. Il conserve le chemin absolu explicitement approuvé, lance BouVideoServ avec son dossier de travail, puis vérifie séparément :
+
+- la route locale `/api/health` ;
+- le champ `running` de `/api/engine` ;
+- l’ouverture TCP du port RTMP `1935`.
+
+L’arrêt et le redémarrage sont refusés si le chemin du processus actif ne correspond pas exactement au binaire sélectionné. La fermeture de BouMultiChat ne coupe pas automatiquement le serveur.

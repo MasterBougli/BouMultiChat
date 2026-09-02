@@ -15,7 +15,7 @@
         Closed="WindowClosed">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="84" />
+            <RowDefinition Height="140" />
             <RowDefinition Height="*" />
             <RowDefinition Height="32" />
         </Grid.RowDefinitions>
@@ -25,12 +25,16 @@
                 BorderBrush="{StaticResource BorderBrush}"
                 BorderThickness="0,0,0,1">
             <Grid Margin="22,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="78" />
+                    <RowDefinition Height="62" />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                <StackPanel Grid.Row="0" VerticalAlignment="Center" Orientation="Horizontal">
                     <Border Width="42"
                             Height="42"
                             Background="{StaticResource AccentBrush}"
@@ -54,7 +58,7 @@
                     </StackPanel>
                 </StackPanel>
 
-                <StackPanel Grid.Column="1" VerticalAlignment="Center" Orientation="Horizontal">
+                <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Orientation="Horizontal">
                     <Border Margin="0,0,10,0"
                             Padding="12,7"
                             VerticalAlignment="Center"
@@ -105,6 +109,72 @@
                         </StackPanel>
                     </Button>
                 </StackPanel>
+
+                <Border Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Margin="0,0,0,10"
+                        Padding="12,7"
+                        Background="{StaticResource InputBrush}"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Ellipse x:Name="RtmpStatusEllipse"
+                                 Width="10"
+                                 Height="10"
+                                 Margin="2,0,10,0"
+                                 VerticalAlignment="Center"
+                                 Fill="{StaticResource SubtleTextBrush}" />
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock x:Name="RtmpStatusTextBlock"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Text="Vérification de BouVideoServ…" />
+                            <TextBlock x:Name="RtmpLinkTextBlock"
+                                       Margin="0,2,0,0"
+                                       Foreground="{StaticResource SubtleTextBrush}"
+                                       FontSize="10"
+                                       Text="API — · RTMP — · contrôle —" />
+                        </StackPanel>
+                        <Button x:Name="RtmpChooseButton"
+                                Grid.Column="2"
+                                MinHeight="36"
+                                Margin="8,0,0,0"
+                                Padding="13,0"
+                                Click="ChooseRtmpServerButtonClick"
+                                Content="Choisir le serveur" />
+                        <Button x:Name="RtmpStartButton"
+                                Grid.Column="3"
+                                MinHeight="36"
+                                Margin="8,0,0,0"
+                                Padding="13,0"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                Click="StartRtmpServerButtonClick"
+                                Content="Démarrer" />
+                        <Button x:Name="RtmpRestartButton"
+                                Grid.Column="4"
+                                MinHeight="36"
+                                Margin="8,0,0,0"
+                                Padding="13,0"
+                                Click="RestartRtmpServerButtonClick"
+                                Content="Redémarrer" />
+                        <Button x:Name="RtmpStopButton"
+                                Grid.Column="5"
+                                MinHeight="36"
+                                Margin="8,0,0,0"
+                                Padding="13,0"
+                                Click="StopRtmpServerButtonClick"
+                                Content="Arrêter" />
+                    </Grid>
+                </Border>
             </Grid>
         </Border>
 

@@ -1,0 +1,3 @@
+[submodule "external/BouVideoServ"]
+	path = external/BouVideoServ
+	url = https://github.com/MasterBougli/BouVideoServ.git

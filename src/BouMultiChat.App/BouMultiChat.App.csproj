@@ -8,6 +8,21 @@
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4191.47" />
   </ItemGroup>
 
+  <ItemGroup Condition="Exists('..\..\external\BouVideoServ\target\release\bouvideoserv.exe')">
+    <Content Include="..\..\external\BouVideoServ\target\release\bouvideoserv.exe"
+             Link="BouVideoServ\bin\bouvideoserv.exe"
+             CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\external\BouVideoServ\web\**\*"
+             Link="BouVideoServ\web\%(RecursiveDir)%(Filename)%(Extension)"
+             CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('..\..\external\BouVideoServ\bin\mediamtx.exe')">
+    <Content Include="..\..\external\BouVideoServ\bin\mediamtx.exe"
+             Link="BouVideoServ\bin\mediamtx.exe"
+             CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0-windows</TargetFramework>

@@ -24,11 +24,25 @@ Le développement a commencé par la frontière de sécurité : le dépôt cont
 - sauvegarde et restauration automatiques dans les données locales Windows ;
 - reconnexion automatique bornée et bouton de rechargement manuel ;
 - icône dédiée dans la barre des tâches Windows ;
+- détection de BouVideoServ, contrôle de l’API locale et du port RTMP ;
+- démarrage, arrêt et redémarrage limités au binaire BouVideoServ sélectionné ;
 - isolation WebView2 par colonne ;
 - blocage des domaines non autorisés, téléchargements, fenêtres secondaires, permissions sensibles et ponts JavaScript natifs ;
 - validation automatisée des identifiants et des tentatives courantes d’injection.
 
 OBS et le relais de délai restent à implémenter. TikTok LIVE ne fournit actuellement pas de chat officiel intégrable et n’est donc pas activé.
+
+## Serveur RTMP local
+
+BouVideoServ est référencé dans `external/BouVideoServ` comme sous-module Git. Pour récupérer les deux projets ensemble :
+
+```powershell
+git clone --recurse-submodules https://github.com/MasterBougli/BouMultiChat.git
+```
+
+Compilez ensuite BouVideoServ avec `cargo build --release` dans son dossier, puis reconstruisez BouMultiChat. Son exécutable et son interface web seront copiés dans la sortie de BouMultiChat. MediaMTX doit être placé dans `external/BouVideoServ/bin/mediamtx.exe` avant la compilation. Le bouton **Choisir le serveur** permet aussi de sélectionner une installation existante.
+
+L’état « opérationnel » exige trois vérifications indépendantes : l’API `127.0.0.1:8080`, l’état MediaMTX retourné par BouVideoServ et le port RTMP local `1935`.
 
 ## Choix technique
 
